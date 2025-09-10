@@ -1,0 +1,31 @@
+
+#To generate background file from Intepro Output file 
+cut -f1 /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Slycopersicum_691_ITAG4.0.protein_primaryTranscriptOnly_Interpro_Output.tsv | sort | uniq > background.txt
+
+
+#To generate IPR vocabulary file describing InterPro terms
+FUNC-E-terms --vocab IPR > IPR.terms.tsv
+
+#To generate gene to IPR file that tell which genes has what IPR ID. 
+awk -F'\t' '$12 != "-" { print $1 "\t" $12 }'  /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Slycopersicum_691_ITAG4.0.protein_primaryTranscriptOnly_Interpro_Output.tsv > gene2ipr.tsv
+#Manually removed .1.1/.2.1 etc to convert protein IDs to gene IDs. 
+
+
+# Command for running the tool Func-e
+ FUNC-E \
+  --background background.txt \
+  --query_list query.txt \
+  --terms IPR.terms.tsv \
+  --terms2features gene2ipr.tsv \
+  --ecut 0.05 \
+  --outprefix ipr_enrichment
+
+FUNC-E \
+  --background /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Required_Files/background.txt \
+  --query_list /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Up_Fo47_1DPI/Up_Fo47_1DPI.txt \
+  --terms /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Required_Files/IPR_Terms.tsv \
+  --terms2features /Users/vidhasrivastava/Amey_Lab/Fol_Fo47_Tomato/Interpro_Term_Enrichment/Required_Files/gene2ipr.tsv \
+  --ecut 0.05 \
+  --outprefix Up_Fo47_1DPI_IPR_Enrichment
+
+
